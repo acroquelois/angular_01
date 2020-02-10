@@ -7,6 +7,12 @@ describe('GET /', () => {
   });
 });
 
+describe('GET /hi', () => {
+  it('should render properly', async () => {
+    await request(app).get('/hi').expect(200);
+  });
+});
+
 describe('GET /list', () => {
   it('should render properly with valid parameters', async () => {
     await request(app)
