@@ -2,16 +2,19 @@ const axios = require('axios');
 
 export async function aggregationApi(){
     try{
-        const [joke, taco, gps, cats] = await Promise.all([
+        const [joke, taco, gps, cats, beer] = await Promise.all([
             getOneJoke(),
             getOneTacos(),
             getGouvAdress(),
-            getThreeCatFact()
+            getThreeCatFact(),
+            getBeerRecipe()
         ])
         return {
+            "gps":gps,
             "joke": joke,
-            "taco": taco,
-            "gps":gps
+            "catFact":cats,
+            "beer":beer,
+            "taco": taco 
         }
     }catch(error){
         return error
@@ -21,9 +24,9 @@ export async function aggregationApi(){
 async function getThreeCatFact(){
     return await axios('https://cat-fact.herokuapp.com/facts/random?amount=3')
     .then(({data}) =>{
-        return data;
+        return data.map(x => { return x.text})
     }).catch(() => {
-        throw "Error fetching joke";
+        throw "Error fetching cats";
     })
 }
 
@@ -41,7 +44,7 @@ async function getOneTacos(){
     .then(({data}) =>{
         return data.condiment.name;
     }).catch(() => {
-        throw "Error fetching joke";
+        throw "Error fetching tacos";
     })
 }
 
@@ -55,5 +58,18 @@ async function getGouvAdress(){
         }
     }).catch(() => {
         throw "Error fetching adress";
+    })
+}
+
+async function getBeerRecipe(){
+    return await axios('https://api.punkapi.com/v2/beers/random')
+    .then(({data}) =>{
+        let [{name,description}] = data
+        return {
+            "name":name,
+            "description":description
+        }
+    }).catch(() => {
+        throw "Error fetching beer";
     })
 }
