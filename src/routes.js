@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { aggregationApi } from './request'
 
 const routes = Router();
 
@@ -7,6 +8,14 @@ const routes = Router();
  */
 routes.get('/', (req, res) => {
   res.render('index', { title: 'Express Babel' });
+});
+
+/**
+ * GET api data
+ */
+routes.get('/hi', async (req, res) => {
+  res.send(await aggregationApi());
+  
 });
 
 /**
